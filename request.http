@@ -1,0 +1,25 @@
+### create new user
+POST http://localhost:3000/auth/signup
+Content-Type: application/json
+
+{
+ "email" : "osam@gmail.com",
+ "password" : "hdhhggdfggd"
+}
+
+### find user with id
+GET http://localhost:3000/auth/68e659031bb388b996e1a453
+
+### find all users with same email 
+GET http://localhost:3000/auth?email=osam@gmail.com
+
+### update user email or password or the two 
+PATCH http://localhost:3000/auth/68e659031bb388b996e1a453
+Content-Type: application/json
+
+{
+      "email" : "semo@gmail.com"
+}
+
+### delete user 
+DELETE http://localhost:3000/auth/68e659031bb388b996e1a453
