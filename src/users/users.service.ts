@@ -35,6 +35,9 @@ export class UsersService {
     }
   }
   async findOne(id: string) {
+    if (id == null) {
+      throw new BadRequestException('your id not valid ');
+    }
     try {
       const user = await this.prisma.user.findUnique({ where: { id } });
       if (!user) {
@@ -52,10 +55,8 @@ export class UsersService {
   }
 
   async find(email: string) {
-    const users = await this.prisma.user.findMany({ where: { email } });
-    if (users.length == 0) {
-      return `there is no users yet`;
-    }
+    const users = await this.prisma.user.findFirst({ where: { email } });
+
     return users;
   }
   async updateUser(id: string, body: UpdateUserDto) {

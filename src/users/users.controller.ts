@@ -1,43 +1,48 @@
 import {
+  BadRequestException,
   Body,
   Controller,
-  Delete,
   Get,
-  Param,
-  Patch,
   Post,
-  Query,
+  Session,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/craete-user.dto';
-import { UsersService } from './users.service';
-import { User } from '@prisma/client';
-import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { AuthService } from './auth.service';
+import { AuthUserDto } from './dtos/authUser.dto';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { AuthGuard } from 'src/guadrs/auth.guard';
 @Serialize(UserDto)
 @Controller('auth')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
-  @Post('signup')
-  createUser(@Body() body: CreateUserDto) {
-    return this.usersService.createUser(body);
-  }
-  // @UseInterceptors(new SerializeInterceptor(UserDto))
+  constructor(private authService: AuthService) {}
 
-  @Get()
-  findUsers(@Query('email') email: string) {
-    return this.usersService.find(email);
+  @Get('whoami')
+  @UseGuards(AuthGuard)
+  async whoami(@CurrentUser() user) {
+    if (user) return user;
+    throw new BadRequestException('There is no sign in user');
   }
-  @Get(':id')
-  findUserById(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  @Post('signup')
+  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signup(body);
+    session.userId = user.id;
+    return user;
   }
-  @Patch(':id')
-  updateUserById(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    return this.usersService.updateUser(id, body);
+
+  @Post('signin')
+  async signin(@Body() body: AuthUserDto, @Session() session: any) {
+    const user = await this.authService.signin(body);
+    session.userId = user.id;
+    return user;
   }
-  @Delete(':id')
-  deleteUserById(@Param('id') id: string) {
-    return this.usersService.deleteUser(id);
+
+  @Post('signout')
+  @UseGuards(AuthGuard)
+  signOut(@Session() session: any) {
+    session.userId = null;
+    return 'sign out';
   }
 }
