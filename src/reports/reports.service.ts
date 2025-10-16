@@ -23,17 +23,19 @@ export class ReportsService {
   async getReports(query: GetEstimateReportDto) {
     const { make, model, year } = query;
     const where: any = {};
+    if (query.make) {
+      where.make = make;
+    }
+    if (query.model) {
+      where.model = model;
+    }
+    if (query.year) {
+      where.year = {
+        gte: year - 3,
+        lte: year + 3,
+      };
+    }
 
-    where.make = make;
-    where.model = model;
-    where.year = {
-      gte: year - 3,
-      lte: year + 3,
-    };
-    where.year = {
-      gte: year - 3,
-      lte: year + 3,
-    };
     if (query.mileage) {
       where.mileage = query.mileage;
     }
@@ -48,11 +50,18 @@ export class ReportsService {
         lte: query.lng + 4,
       };
     }
+    where.approved = true;
     const reports = await this.prisma.report.findMany({
       where: { ...where },
     });
 
     return { numOfReports: reports.length, reports };
+  }
+  async getCurrentUserReports(user) {
+    const CurrentUserReports = await this.prisma.report.findMany({
+      where: { userId: user.id },
+    });
+    return CurrentUserReports;
   }
   async create(body: CreateReportDto, user: User) {
     const findUser = this.usersService.findOne(user.id);

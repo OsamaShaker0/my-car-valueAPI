@@ -4,7 +4,7 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
- "email" : "admin@test.com",
+ "email" : "user1@gmail.com",
  "password" : "123456"
 }
 
@@ -15,7 +15,7 @@ Content-Type: application/json
 
 {
 
-  "email" : "user1@test.com",
+  "email" : "osama@gmail.com",
  "password" : "123456"
 }
 
@@ -39,7 +39,8 @@ GET http://localhost:3000/reports?make=toyota&year=2002&model=corolla
 GET http://localhost:3000/reports/not-approved
 
 
-
+### get current user reports 
+GET http://localhost:3000/reports/my-reports
 
 *
 
@@ -68,4 +69,4 @@ Content-Type: application/json
 
 
 ### delete report  for admin only or the same user who craete the report 
-DELETE http://localhost:3000/reports/68efe65e5a4b68b92e27d322
+DELETE http://localhost:3000/reports/68f0dd5878399e8fe54fe6f1

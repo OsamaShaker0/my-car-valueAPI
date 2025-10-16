@@ -9,10 +9,13 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 export class GetEstimateReportDto {
+  @IsOptional()
   @IsString()
   make: string;
+  @IsOptional()
   @IsString()
   model: string;
+  @IsOptional()
   @Transform(({ value }) => parseInt(value))
   @IsNumber()
   @Min(1930)
