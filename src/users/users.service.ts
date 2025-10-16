@@ -9,7 +9,6 @@ import { User } from '@prisma/client';
 import { Logger } from '@nestjs/common';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { PrismaClientValidationError } from '@prisma/client/runtime/library';
-//TODO : NEED TO HANDLE ERRORS WITH FILTERS AND HANDLE ALL PRISMA ERRORS
 @Injectable()
 export class UsersService {
   constructor(
