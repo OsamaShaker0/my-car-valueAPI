@@ -1,19 +1,12 @@
-### Get current sign in user 
-GET  http://localhost:3000/auth/whoami
-
-
-
 
 ### create new user
 POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
- "email" : "testss@test.com",
+ "email" : "admin@test.com",
  "password" : "123456"
 }
-
-
 
 
 ### signin user 
@@ -22,9 +15,12 @@ Content-Type: application/json
 
 {
 
-  "email" : "testss@test.com",
+  "email" : "user1@test.com",
  "password" : "123456"
 }
+
+### Get current sign in user 
+GET  http://localhost:3000/auth/whoami
 
 
 
@@ -32,3 +28,44 @@ Content-Type: application/json
 POST  http://localhost:3000/auth/signout
 
 
+
+####################################################################333
+
+### get reports 
+GET http://localhost:3000/reports?make=toyota&year=2002&model=corolla
+
+
+### get not apprpved reports for admins only 
+GET http://localhost:3000/reports/not-approved
+
+
+
+
+*
+
+### create report for signin  users only 
+POST http://localhost:3000/reports
+Content-Type: application/json
+
+{
+  "make": "toyota",
+  "year" : 2002,
+  "model": "corolla",
+  "price" : 11000 ,
+  "mileage" : 1000,
+  "lng" : 31.2357,  
+  "lat":30.0444
+
+}
+
+### update report aproved for admins only 
+PATCH http://localhost:3000/reports/68efe3ba207b574da00b4386
+Content-Type: application/json
+
+{
+  "approved" : true
+}
+
+
+### delete report  for admin only or the same user who craete the report 
+DELETE http://localhost:3000/reports/68efe65e5a4b68b92e27d322

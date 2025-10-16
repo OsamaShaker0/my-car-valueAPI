@@ -1,0 +1,32 @@
+import {
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import { UsersService } from '../users.service';
+
+declare global {
+  namespace Express {
+    interface Request {
+      currentUser?: any;
+    }
+  }
+}
+
+@Injectable()
+export class CurrentUserMiddleware implements NestMiddleware {
+  constructor(private userService: UsersService) {}
+  async use(req: Request, res: Response, next: NextFunction) {
+    const { userId } = req.session || {};
+    if (userId) {
+      const user = await this.userService.findOne(userId);
+      if (!user) {
+        throw new UnauthorizedException();
+      }
+      const { password, ...safeUser } = user;
+      req.currentUser = safeUser;
+    }
+    next();
+  }
+}

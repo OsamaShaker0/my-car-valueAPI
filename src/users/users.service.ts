@@ -3,7 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { PrismaService } from 'prisma/primsa.service';
+import { PrismaService } from '../../prisma/primsa.service';
 import { CreateUserDto } from './dtos/craete-user.dto';
 import { User } from '@prisma/client';
 import { Logger } from '@nestjs/common';
@@ -40,12 +40,9 @@ export class UsersService {
     }
     try {
       const user = await this.prisma.user.findUnique({ where: { id } });
-      if (!user) {
-        throw new BadRequestException(`Cannot find user with id of ${id}`);
-      }
-
       return user;
     } catch (error) {
+      
       if (error.code === 'P2023') {
         throw new BadRequestException(`Invalid ID format: ${id}`);
       }
